@@ -1,0 +1,101 @@
+﻿@page "/"
+@rendermode InteractiveServer
+<PageTitle>Tennis Score</PageTitle>
+
+<h1 role="status">Last score by: @LastPlayerToScore</h1>
+<div class="scoreboard">
+<p role="status">@PlayerOne.Name - @PlayerTwo.Name</p>
+<p role="status">@Score(PlayerOne.Score, PlayerTwo.Score)</p>
+
+</div>
+
+<button class="btn btn-primary" disabled="@GameComplete" @onclick='() => PlayerOne.Score = IncreaseScore(PlayerOne)'>PlayerOne</button>
+<button class="btn btn-primary" disabled="@GameComplete" @onclick='() => PlayerTwo.Score = IncreaseScore(PlayerTwo)'>PlayerTwo</button>
+<button class="btn btn-primary"  @onclick="@Reset">Reset</button>
+
+@code {
+	public class Player
+	{
+		public string Name { get; set; }
+		public int Score { get; set; }
+
+		public Player(string name)
+		{
+			Name = name;
+			Score = 0; //Should not be nessecary! only here for clearity
+		}
+	}
+
+	public enum ScoreName { Love, Fifteen, Thirty, Forty };
+	public bool GameComplete = false;
+
+	public string LastPlayerToScore = "";
+
+	public Player PlayerOne = new Player("Novak");
+	public Player PlayerTwo = new Player("Carlos");
+
+	private int IncreaseScore(Player player)
+	{
+		LastPlayerToScore = player.Name;
+		player.Score += 1;
+		return player.Score;
+	}
+
+	private string Score(int PlayerOneScore, int PlayerTwoScore)
+	{
+
+		bool EachPlayerHasScoreOfThree = PlayerOneScore >= 3 && PlayerTwoScore >= 3;
+		bool PlayerHasFourPoints = PlayerOneScore >= 4 || PlayerTwoScore >= 4;
+		int ScoreDifference = Math.Abs(PlayerOneScore - PlayerTwoScore);
+
+		if (PlayerOneScore == PlayerTwoScore && EachPlayerHasScoreOfThree)
+		{
+			return GetScoreName(PlayerOneScore) + " -  Deuce";
+		}
+		else if (ScoreDifference == 1 && EachPlayerHasScoreOfThree)
+		{
+			return GetComparedScoreString(PlayerOneScore, PlayerTwoScore, "Advantage");		
+		}
+		else if (ScoreDifference >= 2 && PlayerHasFourPoints)
+		{
+			GameComplete = true;
+			return GetComparedScoreString(PlayerOneScore, PlayerTwoScore, "Game");
+		}
+		else
+		{
+			return GetScoreName(PlayerOneScore) + " - " + GetScoreName(PlayerTwoScore);
+		}
+	}
+
+	private string GetComparedScoreString(int ScoreOne, int ScoreTwo, string text)
+	{
+		if (ScoreOne > ScoreTwo)
+		{
+			return text + " - " + GetScoreName(ScoreTwo);
+		}
+		else
+		{
+			return GetScoreName(ScoreOne) + " - " + text;
+		}
+	}
+
+	private string GetScoreName(int num)
+	{
+		if (num <= 3)
+		{
+			return ((ScoreName)num).ToString();
+		}
+		else
+		{
+			return num.ToString();
+		}
+	}
+
+	private void Reset()
+	{
+		GameComplete = false;
+		LastPlayerToScore = "";
+		PlayerOne.Score = 0;
+		PlayerTwo.Score = 0;
+	}
+}
