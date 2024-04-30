@@ -22,17 +22,17 @@
 		public Player(string name)
 		{
 			Name = name;
-			Score = 0; //Should not be nessecary! only here for clearity
+			Score = 0;
 		}
 	}
 
-	public enum ScoreName { Love, Fifteen, Thirty, Forty };
-	public bool GameComplete = false;
+	private enum ScoreName { Love, Fifteen, Thirty, Forty };
+	private bool GameComplete = false;
 
-	public string LastPlayerToScore = "";
+	private string LastPlayerToScore = "";
 
-	public Player PlayerOne = new Player("Novak");
-	public Player PlayerTwo = new Player("Carlos");
+	private Player PlayerOne = new Player("Novak");
+	private Player PlayerTwo = new Player("Carlos");
 
 	private int IncreaseScore(Player player)
 	{
@@ -41,53 +41,53 @@
 		return player.Score;
 	}
 
-	private string Score(int PlayerOneScore, int PlayerTwoScore)
+	private string Score(int playerOneScore, int playerTwoScore)
 	{
 
-		bool EachPlayerHasScoreOfThree = PlayerOneScore >= 3 && PlayerTwoScore >= 3;
-		bool PlayerHasFourPoints = PlayerOneScore >= 4 || PlayerTwoScore >= 4;
-		int ScoreDifference = Math.Abs(PlayerOneScore - PlayerTwoScore);
+		bool eachPlayerHasScoreOfThree = playerOneScore >= 3 && playerTwoScore >= 3;
+		bool playerHasFourPoints = playerOneScore >= 4 || playerTwoScore >= 4;
+		int scoreDifference = Math.Abs(playerOneScore - playerTwoScore);
 
-		if (PlayerOneScore == PlayerTwoScore && EachPlayerHasScoreOfThree)
+		if (playerOneScore == playerTwoScore && eachPlayerHasScoreOfThree)
 		{
-			return GetScoreName(PlayerOneScore) + " -  Deuce";
+			return GetScoreName(playerOneScore) + " -  Deuce";
 		}
-		else if (ScoreDifference == 1 && EachPlayerHasScoreOfThree)
+		else if (scoreDifference == 1 && eachPlayerHasScoreOfThree)
 		{
-			return GetComparedScoreString(PlayerOneScore, PlayerTwoScore, "Advantage");		
+			return GetComparedScoreString(playerOneScore, playerTwoScore, "Advantage");		
 		}
-		else if (ScoreDifference >= 2 && PlayerHasFourPoints)
+		else if (scoreDifference >= 2 && playerHasFourPoints)
 		{
 			GameComplete = true;
-			return GetComparedScoreString(PlayerOneScore, PlayerTwoScore, "Game");
+			return GetComparedScoreString(playerOneScore, playerTwoScore, "Game");
 		}
 		else
 		{
-			return GetScoreName(PlayerOneScore) + " - " + GetScoreName(PlayerTwoScore);
+			return GetScoreName(playerOneScore) + " - " + GetScoreName(playerTwoScore);
 		}
 	}
 
-	private string GetComparedScoreString(int ScoreOne, int ScoreTwo, string text)
+	private string GetComparedScoreString(int scoreOne, int scoreTwo, string text)
 	{
-		if (ScoreOne > ScoreTwo)
+		if (scoreOne > scoreTwo)
 		{
-			return text + " - " + GetScoreName(ScoreTwo);
+			return text + " - " + GetScoreName(scoreTwo);
 		}
 		else
 		{
-			return GetScoreName(ScoreOne) + " - " + text;
+			return GetScoreName(scoreOne) + " - " + text;
 		}
 	}
 
-	private string GetScoreName(int num)
+	private string GetScoreName(int score)
 	{
-		if (num <= 3)
+		if (score <= 3)
 		{
-			return ((ScoreName)num).ToString();
+			return ((ScoreName)score).ToString();
 		}
 		else
 		{
-			return num.ToString();
+			return score.ToString();
 		}
 	}
 
